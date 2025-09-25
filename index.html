@@ -2,44 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Logos de Clientes</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 20px; }
-  .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
-  .logo-item { text-align: center; }
-  .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
-</style>
+<title>Logo de prueba</title>
 </head>
 <body>
-
-<h1>Logos de Clientes</h1>
-<div class="logo-container" id="logos"></div>
-
-<script>
-  const container = document.getElementById("logos");
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxCRZgh362V6fpJYOT2qGQwQt0SCP074Bv3fPtExXzWzSn2frQAHkg8LQRsznQOkUhRWw/exec"; // reemplaza con tu URL de Apps Script
-
-  fetch(scriptURL)
-    .then(res => res.json())
-    .then(logos => {
-      logos.forEach(c => {
-        const div = document.createElement("div");
-        div.className = "logo-item";
-        div.innerHTML = `
-          <img src="${c.url}" alt="Logo de ${c.nombre}" onerror="this.onerror=null;this.src='https://via.placeholder.com/200?text=No+Disponible';">
-          <p>${c.nombre}</p>
-        `;
-        container.appendChild(div);
-      });
-    })
-    .catch(err => {
-      console.error("Error cargando logos:", err);
-      container.innerHTML = "<p>❌ No se pudieron cargar los logos.</p>";
-    });
-</script>
-
+<h1>Logo directo desde Drive</h1>
+<img src="https://drive.google.com/uc?export=view&id=1_MiuQps1Y4Bi4ix4GwqXcOOjOC6ujEIx" alt="Logo de prueba" style="max-width:200px; height:auto;">
 </body>
 </html>
+
 
 
 
