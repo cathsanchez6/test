@@ -2,60 +2,55 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Test traer datos</title>
+  <title>Logo desde Google Sheet</title>
 </head>
 <body>
-  <h1>Logo desde Google Sheet</h1>
-  <img id="logo" alt="Logo de prueba" style="max-width:200px; height:auto;" />
+  <h2>Logo desde Google Sheet</h2>
+  <img id="logo" alt="Logo de prueba" width="200" />
 
   <script>
-    const sheetId = "1xJEjP9j0ocvG6sob4JfNlQVObK-tT-DY-ubFCAmlsqs"; 
-    const sheetName = "Hoja 1";
+    // 👉 URL de tu Google Sheet publicado como CSV
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-XXX/pub?output=csv";
+    
+    // Función para convertir un link de Drive a formato directo
+    function driveToDirect(url) {
+      const match = url.match(/\/d\/(.*)\/view/);
+      return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : url;
+    }
 
     async function cargarLogo() {
-      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
-      const resp = await fetch(url);
-      const text = await resp.text();
-      console.log("Respuesta cruda:", text);
+      try {
+        const res = await fetch(sheetUrl);
+        const text = await res.text();
 
-      const json = JSON.parse(text.substr(47).slice(0, -2));
-      console.log("JSON parseado:", json);
+        // Parse CSV simple (solo tomamos primera fila después del encabezado)
+        const filas = text.split("\n").map(l => l.split(","));
+        const headers = filas[0];
+        const datos = filas[1]; // primera fila de datos
 
-      const rows = json.table.rows;
-      console.log("Filas:", rows);
+        const obj = {};
+        headers.forEach((h, i) => {
+          obj[h.trim()] = datos[i] ? datos[i].trim() : "";
+        });
 
-      const fila = rows.find(r => r.c && r.c[0]?.v == "1");
-      console.log("Fila encontrada:", fila);
+        console.log("Fila 1 del Sheet:", obj);
 
-      if (fila) {
-        let logo = fila.c[1]?.v || "";
-        console.log("Logo crudo desde la hoja:", logo);
+        // Convertir logo de Drive
+        const logoUrl = driveToDirect(obj.logo);
+        console.log("Logo final:", logoUrl);
 
-        // Si el logo es de Drive, transformarlo
-        if (logo.includes("drive.google.com")) {
-          let fileId = null;
-          const match1 = logo.match(/\/d\/([a-zA-Z0-9_-]+)\//);
-          if (match1) fileId = match1[1];
-          const match2 = logo.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-          if (match2) fileId = match2[1];
-          if (fileId) logo = `https://drive.google.com/uc?export=view&id=${fileId}`;
-        }
+        // Asignar al <img>
+        document.getElementById("logo").src = logoUrl;
 
-        console.log("Logo final:", logo);
-        document.getElementById("logo").src = logo;
+      } catch (err) {
+        console.error("Error cargando logo:", err);
       }
     }
 
     cargarLogo();
-
-    // logo contiene la URL en string
-    console.log("Asignando src al <img>...");
-    document.getElementById("logo").src = logo;
-    console.log("src final en el <img>:", document.getElementById("logo").src);
-
-
-    
   </script>
 </body>
+</html>
+
 </html>
 
