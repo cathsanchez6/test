@@ -2,37 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Prueba Logo desde WebApp</title>
-  <script>
-    async function cargarLogo() {
-      try {
-        // 👇 Aquí pones el ID de la fila de tu hoja (columna A)
-        const url = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec?id=1";
-
-        const res = await fetch(url);
-        const data = await res.json();
-
-        console.log("Respuesta:", data);
-
-        if (data.logo) {
-          document.getElementById("logo").src = data.logo;
-          document.getElementById("status").textContent = "✅ Logo cargado";
-        } else {
-          document.getElementById("status").textContent = "⚠️ No se encontró logo";
-        }
-      } catch (err) {
-        console.error(err);
-        document.getElementById("status").textContent = "❌ Error al cargar";
-      }
-    }
-
-    window.onload = cargarLogo;
-  </script>
+  <title>Test Logo Drive</title>
 </head>
 <body>
-  <h1>Logo desde Google Sheet</h1>
-  <p id="status">Cargando...</p>
-  <img id="logo" alt="Logo cargado" style="max-width:200px; height:auto;" />
+  <h1>Logo desde Drive</h1>
+  <img 
+    src="https://drive.google.com/uc?export=view&id=1_MiuQps1Y4Bi4ix4GwqXcOOjOC6ujEIx"
+    alt="Logo de prueba"
+    style="max-width:200px; height:auto;"
+  />
 </body>
 </html>
-
