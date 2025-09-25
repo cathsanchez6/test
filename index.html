@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Logos desde Carpeta Drive</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 20px; }
-  .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
-  .logo-item { text-align: center; }
-  .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
-</style>
+  <meta charset="UTF-8">
+  <title>Galería de Logos</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { margin-bottom: 20px; }
+    .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
+    .logo-item { text-align: center; }
+    .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
+  </style>
 </head>
 <body>
 
-<h1>Logos desde Carpeta de Drive</h1>
+<h1>Logos de Clientes</h1>
 <div class="logo-container" id="logos"></div>
 
 <script>
+  // URL de tu Apps Script desplegado
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxCRZgh362V6fpJYOT2qGQwQt0SCP074Bv3fPtExXzWzSn2frQAHkg8LQRsznQOkUhRWw/exec";
+
   const container = document.getElementById("logos");
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxCRZgh362V6fpJYOT2qGQwQt0SCP074Bv3fPtExXzWzSn2frQAHkg8LQRsznQOkUhRWw/exec"; // pega aquí tu enlace de Apps Script desplegado
 
   fetch(scriptURL)
     .then(res => res.json())
@@ -32,10 +35,14 @@
         container.appendChild(div);
       });
     })
-    .catch(err => console.error("Error cargando logos:", err));
+    .catch(err => {
+      console.error("Error cargando logos:", err);
+      container.innerHTML = "<p>No se pudieron cargar los logos. Revisa los permisos de la carpeta de Drive.</p>";
+    });
 </script>
 
 </body>
 </html>
+
 
 
