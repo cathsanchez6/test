@@ -10,24 +10,22 @@
 
   <script>
     async function cargarLogo() {
-      const sheetId = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec"; // 👈 cambia por tu ID real
-      const sheetName = "Hoja 1";     // 👈 cambia por el nombre de tu hoja
+      const sheetId = "1xJEjP9j0ocvG6sob4JfNlQVObK-tT-DY-ubFCAmlsqs"; // 👈 tu ID correcto
+      const sheetName = "Hoja 1";     
       const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
 
       try {
         const res = await fetch(url);
         const text = await res.text();
 
-        // Parsear el JSON
         const json = JSON.parse(text.substr(47).slice(0, -2));
         const filas = json.table.rows;
 
-        // Tomar la primera fila (id=1)
-        const fila = filas[0];
+        const fila = filas[0]; // primera fila
         const logoCrudo = fila.c[1].v;  // Columna B = logo
         console.log("Logo crudo desde la hoja:", logoCrudo);
 
-        // Extraer el fileId del link de Drive
+        // Extraer el fileId de Google Drive
         let fileId = null;
         const match1 = logoCrudo.match(/\/d\/([a-zA-Z0-9_-]+)\//);
         if (match1) fileId = match1[1];
@@ -36,11 +34,9 @@
 
         if (!fileId) throw new Error("No se pudo extraer el fileId del logo");
 
-        // Construir la URL directa de Drive
         const logoFinal = `https://drive.google.com/uc?export=view&id=${fileId}`;
         console.log("Logo final:", logoFinal);
 
-        // Asignar al <img>
         document.getElementById("logo").src = logoFinal;
       } catch (err) {
         console.error("Error cargando logo:", err);
