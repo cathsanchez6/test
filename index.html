@@ -6,11 +6,13 @@
 </head>
 <body>
   <h1>Logo desde Google Sheet</h1>
+
   <div>
-    <label for="clienteId">ID del cliente:</label>
+    <label>ID del cliente:</label>
     <input type="number" id="clienteId" value="1">
     <button id="cargarLogo">Cargar logo</button>
   </div>
+
   <div id="resultado" style="margin-top:20px;">
     <img id="logo" alt="Logo del cliente" style="max-width:200px; height:auto; display:none;">
     <p id="mensaje"></p>
@@ -26,7 +28,7 @@
       const id = inputId.value.trim();
       if (!id) return alert("Ingresa un ID de cliente");
 
-      // URL de tu Apps Script pública
+      // Tu URL pública de Apps Script
       const scriptURL = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec";
 
       try {
@@ -37,7 +39,7 @@
           logoImg.style.display = 'none';
           mensaje.textContent = "❌ " + data.error;
         } else {
-          logoImg.src = data.logo;
+          logoImg.src = data.logo;  // Aquí asignamos la URL directa del logo
           logoImg.style.display = 'block';
           mensaje.textContent = "✅ Logo cargado";
         }
@@ -50,3 +52,4 @@
   </script>
 </body>
 </html>
+
