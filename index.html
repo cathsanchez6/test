@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Logos de Clientes</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
-    .logo-item { text-align: center; }
-    .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
-  </style>
+<meta charset="UTF-8">
+<title>Logos desde Carpeta Drive</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
+  .logo-item { text-align: center; }
+  .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
+</style>
 </head>
 <body>
 
-<h1>Logos de Clientes</h1>
+<h1>Logos desde Carpeta de Drive</h1>
 <div class="logo-container" id="logos"></div>
 
 <script>
-  // Lista de clientes con el ID de Drive de cada logo
-  const clientes = [
-    { nombre: "LOGÍSTICA FERRETERA S A S", logoId: "1_MiuQps1Y4Bi4ix4GwqXcOOjOC6ujEIx" },
-    { nombre: "CLIENTE 2", logoId: "ID_DEL_LOGO_2" },
-    { nombre: "CLIENTE 3", logoId: "ID_DEL_LOGO_3" }
-  ];
-
   const container = document.getElementById("logos");
+  const scriptURL = "TU_URL_DE_APPSCRIPT_PUBLICA"; // pega aquí tu enlace de Apps Script desplegado
 
-  clientes.forEach(c => {
-    const logoUrl = `https://drive.google.com/uc?export=view&id=${c.logoId}`;
-    const div = document.createElement("div");
-    div.className = "logo-item";
-    div.innerHTML = `
-      <img src="${logoUrl}" alt="Logo de ${c.nombre}">
-      <p>${c.nombre}</p>
-    `;
-    container.appendChild(div);
-  });
+  fetch(scriptURL)
+    .then(res => res.json())
+    .then(logos => {
+      logos.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "logo-item";
+        div.innerHTML = `
+          <img src="${c.url}" alt="Logo de ${c.nombre}">
+          <p>${c.nombre}</p>
+        `;
+        container.appendChild(div);
+      });
+    })
+    .catch(err => console.error("Error cargando logos:", err));
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
