@@ -2,35 +2,34 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Logo del Cliente</title>
+<title>Test Logo desde Apps Script</title>
 </head>
 <body>
-<h2>Logo del Cliente</h2>
-<img id="logo" src="" alt="Logo del cliente" style="max-width:300px; height:auto; display:block; margin:20px auto;"/>
-
-<div class="header">
-  <img id="logoCliente" src="" alt="Logo del cliente" class="logo" style="max-width:200px; height:auto;" />
-  <h2>Prueba de Entrega</h2>
-</div>
+<h1>Logo del Cliente</h1>
+<img id="logoCliente" src="" alt="Logo del cliente" style="max-width:200px; height:auto;" />
 
 <script>
-  const clienteId = "1"; // ID del cliente en tu Google Sheet
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec";
+  // ID del cliente que quieres mostrar
+  const clienteId = "1";
 
+  // URL de tu Apps Script deploy
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxlV7TrJuXTgwOTv4y2LA99t7uFlkuUdKGjsloOR05XCi1nqIw8U1Tuj2haJvvTUDhz5w/exec";
+
+  // Función que será llamada por JSONP
   function mostrarCliente(data) {
-    if (data.error) {
-      console.error(data.error);
-      return;
+    console.log("Datos recibidos:", data); // para depuración
+    if(data.logo) {
+      document.getElementById("logoCliente").src = data.logo;
+    } else {
+      console.error("No se encontró logo");
     }
-    // Asignar el logo al <img>
-    document.getElementById("logoCliente").src = data.logo;
   }
 
-  // Crear script JSONP dinámicamente para llamar a tu Apps Script
-  const script = document.createElement("script");
-  script.src = `${scriptUrl}?id=${clienteId}&callback=mostrarCliente`;
-  document.body.appendChild(script);
+  // Crear un script dinámicamente para JSONP
+  const s = document.createElement("script");
+  s.src = `${scriptURL}?id=${clienteId}&callback=mostrarCliente`;
+  document.body.appendChild(s);
 </script>
-
 </body>
 </html>
+
