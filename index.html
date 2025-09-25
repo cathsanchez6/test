@@ -5,15 +5,48 @@
   <title>Logo de Cliente</title>
 </head>
 <body>
-  <h1>Logo desde Drive</h1>
-  <img 
-    id="logo" 
-    src="https://drive.google.com/uc?export=view&id=1_MiuQps1Y4Bi4ix4GwqXcOOjOC6ujEIx" 
-    alt="Logo de prueba" 
-    style="max-width:200px; height:auto;" 
-  />
+  <h1>Logo desde Google Sheet</h1>
+  <div>
+    <label for="clienteId">ID del cliente:</label>
+    <input type="number" id="clienteId" value="1">
+    <button id="cargarLogo">Cargar logo</button>
+  </div>
+  <div id="resultado" style="margin-top:20px;">
+    <img id="logo" alt="Logo del cliente" style="max-width:200px; height:auto; display:none;">
+    <p id="mensaje"></p>
+  </div>
+
+  <script>
+    const boton = document.getElementById('cargarLogo');
+    const inputId = document.getElementById('clienteId');
+    const logoImg = document.getElementById('logo');
+    const mensaje = document.getElementById('mensaje');
+
+    boton.addEventListener('click', async () => {
+      const id = inputId.value.trim();
+      if (!id) return alert("Ingresa un ID de cliente");
+
+      // URL de tu Apps Script pública
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec";
+
+      try {
+        const res = await fetch(`${scriptURL}?id=${id}`);
+        const data = await res.json();
+
+        if (data.error) {
+          logoImg.style.display = 'none';
+          mensaje.textContent = "❌ " + data.error;
+        } else {
+          logoImg.src = data.logo;
+          logoImg.style.display = 'block';
+          mensaje.textContent = "✅ Logo cargado";
+        }
+      } catch (err) {
+        logoImg.style.display = 'none';
+        mensaje.textContent = "❌ Error al cargar el logo";
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>
-
-
-
