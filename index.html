@@ -2,32 +2,44 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Logos de Clientes</title>
-<style>
-  .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
-  .logo-item { text-align: center; }
-  .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
-</style>
+<title>Logo de Cliente</title>
 </head>
 <body>
 
-<h1>Logos de Clientes</h1>
-<div class="logo-container" id="logos"></div>
+<h1>Logo desde Google Sheet</h1>
+<input type="number" id="clienteId" placeholder="Ingresa ID" />
+<button id="cargar">Cargar logo</button>
+
+<div id="resultado">
+  <h2 id="nombreCliente"></h2>
+  <img id="logo" style="max-width:200px; height:auto;" />
+</div>
 
 <script>
-const container = document.getElementById("logos");
-const scriptURL = "https://script.google.com/macros/s/AKfycbxCRZgh362V6fpJYOT2qGQwQt0SCP074Bv3fPtExXzWzSn2frQAHkg8LQRsznQOkUhRWw/exec"; 
-fetch(scriptURL)
-  .then(res => res.json())
-  .then(logos => {
-    logos.forEach(c => {
-      const div = document.createElement("div");
-      div.className = "logo-item";
-      div.innerHTML = `<img src="${c.url}" alt="Logo de ${c.nombre}"><p>${c.nombre}</p>`;
-      container.appendChild(div);
-    });
-  })
-  .catch(err => console.error("Error cargando logos:", err));
+const cargarBtn = document.getElementById("cargar");
+const inputId = document.getElementById("clienteId");
+const logoImg = document.getElementById("logo");
+const nombreCliente = document.getElementById("nombreCliente");
+
+cargarBtn.addEventListener("click", () => {
+  const id = inputId.value;
+  if (!id) return alert("Ingresa un ID");
+
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxCRZgh362V6fpJYOT2qGQwQt0SCP074Bv3fPtExXzWzSn2frQAHkg8LQRsznQOkUhRWw/exec";
+
+  fetch(`${scriptURL}?id=${id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+
+      nombreCliente.textContent = data.razon_social;
+      logoImg.src = data.logo; // ya en Base64
+    })
+    .catch(err => console.error("Error cargando logo:", err));
+});
 </script>
 
 </body>
