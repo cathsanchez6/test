@@ -25,48 +25,33 @@
     <p><strong>Página web:</strong> <span id="pagina_web"></span></p>
   </div>
 
-  <script>
-    // Cambia este ID por el cliente que quieras mostrar
-    const clienteId = "1"; 
+ <img id="logo" src="" alt="Logo del cliente">
 
-    // URL de tu Apps Script
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxlV7TrJuXTgwOTv4y2LA99t7uFlkuUdKGjsloOR05XCi1nqIw8U1Tuj2haJvvTUDhz5w/exec";
+<script>
+const clienteId = "1";
+const callbackName = "mostrarCliente";
+const scriptUrl = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec";
 
-    // Llamada JSONP para obtener datos del cliente
-    const callbackName = "mostrarCliente";
+function mostrarCliente(data) {
+  if (data.error) { alert(data.error); return; }
+  
+  document.getElementById("logo").src = data.logo;
+  document.getElementById("razon_social").textContent = data.razon_social;
+  document.getElementById("sobre_nosotros").textContent = data.sobre_nosotros;
+  document.getElementById("nit").textContent = data.nit;
+  document.getElementById("direccion").textContent = data.direccion;
+  document.getElementById("celular").textContent = data.celular;
+  document.getElementById("ciudad").textContent = data.ciudad;
+  document.getElementById("correo_electronico").textContent = data.correo_electronico;
+  document.getElementById("pagina_web").textContent = data.pagina_web;
+}
 
-    const script = document.createElement('script');
-    script.src = `${scriptUrl}?id=${clienteId}&callback=${callbackName}`;
-    document.body.appendChild(script);
+// Crear script JSONP dinámicamente
+const script = document.createElement('script');
+script.src = `${scriptUrl}?id=${clienteId}&callback=${callbackName}`;
+document.body.appendChild(script);
+</script>
 
-    function mostrarCliente(data) {
-      if (data.error) {
-        alert("Error: " + data.error);
-        return;
-      }
-
-      // Si logo es de Drive, transformar a URL directa
-      let logoUrl = data.logo;
-      if (logoUrl && logoUrl.includes("drive.google.com")) {
-        let fileId = null;
-        const match1 = logoUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        const match2 = logoUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-        if (match1) fileId = match1[1];
-        if (match2) fileId = match2[1];
-        if (fileId) logoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-      }
-
-      document.getElementById("logo").src = logoUrl;
-      document.getElementById("razon_social").textContent = data.razon_social;
-      document.getElementById("sobre_nosotros").textContent = data.sobre_nosotros;
-      document.getElementById("nit").textContent = data.nit;
-      document.getElementById("direccion").textContent = data.direccion;
-      document.getElementById("celular").textContent = data.celular;
-      document.getElementById("ciudad").textContent = data.ciudad;
-      document.getElementById("correo_electronico").textContent = data.correo_electronico;
-      document.getElementById("pagina_web").textContent = data.pagina_web;
-    }
-  </script>
 </body>
 </html>
 
