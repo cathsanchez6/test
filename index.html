@@ -1,55 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Logo de Cliente</title>
+<meta charset="UTF-8">
+<title>Logos desde Carpeta Drive</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  .logo-container { display: flex; flex-wrap: wrap; gap: 20px; }
+  .logo-item { text-align: center; }
+  .logo-item img { max-width: 200px; height: auto; border: 1px solid #ccc; padding: 5px; }
+</style>
 </head>
 <body>
-  <h1>Logo desde Google Sheet</h1>
 
-  <div>
-    <label>ID del cliente:</label>
-    <input type="number" id="clienteId" value="1">
-    <button id="cargarLogo">Cargar logo</button>
-  </div>
+<h1>Logos desde Carpeta de Drive</h1>
+<div class="logo-container" id="logos"></div>
 
-  <div id="resultado" style="margin-top:20px;">
-    <img id="logo" alt="Logo del cliente" style="max-width:200px; height:auto; display:none;">
-    <p id="mensaje"></p>
-  </div>
+<script>
+  const container = document.getElementById("logos");
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxCRZgh362V6fpJYOT2qGQwQt0SCP074Bv3fPtExXzWzSn2frQAHkg8LQRsznQOkUhRWw/exec"; // pega aquí tu enlace de Apps Script desplegado
 
-  <script>
-    const boton = document.getElementById('cargarLogo');
-    const inputId = document.getElementById('clienteId');
-    const logoImg = document.getElementById('logo');
-    const mensaje = document.getElementById('mensaje');
+  fetch(scriptURL)
+    .then(res => res.json())
+    .then(logos => {
+      logos.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "logo-item";
+        div.innerHTML = `
+          <img src="${c.url}" alt="Logo de ${c.nombre}">
+          <p>${c.nombre}</p>
+        `;
+        container.appendChild(div);
+      });
+    })
+    .catch(err => console.error("Error cargando logos:", err));
+</script>
 
-    boton.addEventListener('click', async () => {
-      const id = inputId.value.trim();
-      if (!id) return alert("Ingresa un ID de cliente");
-
-      // Tu URL pública de Apps Script
-      const scriptURL = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec";
-
-      try {
-        const res = await fetch(`${scriptURL}?id=${id}`);
-        const data = await res.json();
-
-        if (data.error) {
-          logoImg.style.display = 'none';
-          mensaje.textContent = "❌ " + data.error;
-        } else {
-          logoImg.src = data.logo;  // Aquí asignamos la URL directa del logo
-          logoImg.style.display = 'block';
-          mensaje.textContent = "✅ Logo cargado";
-        }
-      } catch (err) {
-        logoImg.style.display = 'none';
-        mensaje.textContent = "❌ Error al cargar el logo";
-        console.error(err);
-      }
-    });
-  </script>
 </body>
 </html>
+
 
