@@ -2,49 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Prueba Logo Cliente</title>
+  <title>Mostrar Logo</title>
 </head>
 <body>
   <h1>Logo del Cliente</h1>
-  <img id="logo" alt="Logo del cliente" style="max-width:300px; height:auto;" />
-  <p id="status">Cargando logo...</p>
+  <img id="logo" alt="Logo del cliente" style="max-width:200px; height:auto;" />
 
   <script>
-    // ID del cliente que quieres cargar
-    const clienteId = 1;
+    // URL de la imagen en Drive ya pública
+    const urlLogo = "https://drive.google.com/uc?export=view&id=1_MiuQps1Y4Bi4ix4GwqXcOOjOC6ujEIx";
+    const img = document.getElementById("logo");
 
-    // URL de tu Apps Script
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec";
+    // Asignar solo la URL como string
+    img.src = urlLogo;
 
-    // Usamos fetch con JSONP si tu script lo permite
-    fetch(`${scriptURL}?id=${clienteId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          document.getElementById('status').textContent = data.error;
-          return;
-        }
-
-        // Transformar la URL de Drive (por si viene en formato view)
-        let logoURL = data.logo;
-        if (logoURL.includes("drive.google.com")) {
-          const match = logoURL.match(/\/d\/([a-zA-Z0-9_-]+)\//) || logoURL.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-          if (match) {
-            logoURL = `https://drive.google.com/uc?export=view&id=${match[1]}`;
-          }
-        }
-
-        // Asignar al <img>
-        document.getElementById('logo').src = logoURL;
-        document.getElementById('status').textContent = "✅ Logo cargado";
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById('status').textContent = "❌ Error cargando logo";
-      });
+    img.onload = () => console.log("✅ Logo cargado correctamente");
+    img.onerror = () => console.error("❌ Error al cargar el logo");
   </script>
 </body>
 </html>
-
 
 
