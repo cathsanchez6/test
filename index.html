@@ -2,67 +2,71 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Prueba Logo y Datos</title>
+  <title>Datos del Cliente</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    #logo { max-width: 200px; height: auto; display: block; margin-bottom: 20px; }
-    .dato { margin-bottom: 10px; }
-    .dato span { font-weight: bold; }
+    .cliente { max-width: 600px; margin: auto; }
+    img { max-width: 200px; height: auto; display: block; margin-bottom: 20px; }
+    h2 { margin-top: 0; }
+    p { margin: 5px 0; }
   </style>
 </head>
 <body>
-
-  <h1>Datos del Cliente</h1>
-  <img id="logo" src="" alt="Logo del cliente">
-
-  <div class="dato"><span>Razón social:</span> <span id="razon_social"></span></div>
-  <div class="dato"><span>Sobre nosotros:</span> <span id="sobre_nosotros"></span></div>
-  <div class="dato"><span>NIT:</span> <span id="nit"></span></div>
-  <div class="dato"><span>Dirección:</span> <span id="direccion"></span></div>
-  <div class="dato"><span>Celular:</span> <span id="celular"></span></div>
-  <div class="dato"><span>Ciudad:</span> <span id="ciudad"></span></div>
-  <div class="dato"><span>Correo electrónico:</span> <span id="correo_electronico"></span></div>
-  <div class="dato"><span>Página web:</span> <span id="pagina_web"></span></div>
+  <div class="cliente">
+    <h1>Datos del Cliente</h1>
+    <img id="logo" src="" alt="Logo del cliente">
+    <h2 id="razon_social"></h2>
+    <p id="sobre_nosotros"></p>
+    <p><strong>NIT:</strong> <span id="nit"></span></p>
+    <p><strong>Dirección:</strong> <span id="direccion"></span></p>
+    <p><strong>Celular:</strong> <span id="celular"></span></p>
+    <p><strong>Ciudad:</strong> <span id="ciudad"></span></p>
+    <p><strong>Correo electrónico:</strong> <span id="correo_electronico"></span></p>
+    <p><strong>Página web:</strong> <span id="pagina_web"></span></p>
+  </div>
 
   <script>
-    // Cambia este ID por el que quieras consultar
-    const clienteId = 1;
+    // Cambia este ID por el cliente que quieras mostrar
+    const clienteId = "1"; 
 
-    // URL de tu Apps Script desplegado
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzbfYMl6tVNdDlrvnLKL6qkrzk5ZgXDVAGq5I2WH-aYCytYNmh0Q6j0KUgnBqkbV8LpmA/exec';
+    // URL de tu Apps Script
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxlV7TrJuXTgwOTv4y2LA99t7uFlkuUdKGjsloOR05XCi1nqIw8U1Tuj2haJvvTUDhz5w/exec";
 
-    async function cargarDatosCliente() {
-      try {
-        // Llamada para obtener los datos del cliente (JSON)
-        const response = await fetch(`${scriptUrl}?id=${clienteId}`);
-        const data = await response.json();
+    // Llamada JSONP para obtener datos del cliente
+    const callbackName = "mostrarCliente";
 
-        if (data.error) {
-          console.error('Error:', data.error);
-          return;
-        }
+    const script = document.createElement('script');
+    script.src = `${scriptUrl}?id=${clienteId}&callback=${callbackName}`;
+    document.body.appendChild(script);
 
-        // Asignar datos a los elementos del HTML
-        document.getElementById('razon_social').textContent = data.razon_social;
-        document.getElementById('sobre_nosotros').textContent = data.sobre_nosotros;
-        document.getElementById('nit').textContent = data.nit;
-        document.getElementById('direccion').textContent = data.direccion;
-        document.getElementById('celular').textContent = data.celular;
-        document.getElementById('ciudad').textContent = data.ciudad;
-        document.getElementById('correo_electronico').textContent = data.correo_electronico;
-        document.getElementById('pagina_web').textContent = data.pagina_web;
-
-        // Cargar logo desde Apps Script usando el parámetro image=true
-        const logoImg = document.getElementById('logo');
-        logoImg.src = `${scriptUrl}?id=${clienteId}&image=true`;
-
-      } catch (err) {
-        console.error('Error cargando datos:', err);
+    function mostrarCliente(data) {
+      if (data.error) {
+        alert("Error: " + data.error);
+        return;
       }
+
+      // Si logo es de Drive, transformar a URL directa
+      let logoUrl = data.logo;
+      if (logoUrl && logoUrl.includes("drive.google.com")) {
+        let fileId = null;
+        const match1 = logoUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        const match2 = logoUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (match1) fileId = match1[1];
+        if (match2) fileId = match2[1];
+        if (fileId) logoUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      }
+
+      document.getElementById("logo").src = logoUrl;
+      document.getElementById("razon_social").textContent = data.razon_social;
+      document.getElementById("sobre_nosotros").textContent = data.sobre_nosotros;
+      document.getElementById("nit").textContent = data.nit;
+      document.getElementById("direccion").textContent = data.direccion;
+      document.getElementById("celular").textContent = data.celular;
+      document.getElementById("ciudad").textContent = data.ciudad;
+      document.getElementById("correo_electronico").textContent = data.correo_electronico;
+      document.getElementById("pagina_web").textContent = data.pagina_web;
     }
-
-    cargarDatosCliente();
   </script>
-
 </body>
 </html>
+
